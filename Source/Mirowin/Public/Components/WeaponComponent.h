@@ -10,12 +10,12 @@
 struct FAmmoData;
 class ABaseWeapon;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MIROWIN_API UWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
@@ -23,13 +23,13 @@ public:
 	void StopFire();
 	void Reload();
 
-	FAmmoData GetAmmoData() const {return CurrentWeapon->GetAmmoData();}
-	
+	FAmmoData GetAmmoData() const { return CurrentWeapon ? CurrentWeapon->GetAmmoData() : FAmmoData{0, 0}; }
+
 	bool TryToAddAmmo(TSubclassOf<ABaseWeapon> WeaponType, int32 AmmoAmount);
 	bool NeedAmmo(TSubclassOf<ABaseWeapon> WeaponType);
 
-	bool IsReloading() const {return CurrentWeapon->IsReloading();}
-	
+	bool IsReloading() const { return CurrentWeapon ? CurrentWeapon->IsReloading() : false; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -41,7 +41,8 @@ private:
 	UPROPERTY()
 	ABaseWeapon* CurrentWeapon = nullptr;
 
+	UPROPERTY()
 	TArray<ABaseWeapon*> Weapons;
-	
+
 	void SpawnWeapon();
 };

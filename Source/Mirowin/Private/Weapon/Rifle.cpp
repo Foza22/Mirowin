@@ -17,8 +17,22 @@ void ARifle::BeginPlay()
 
 void ARifle::StartFire()
 {
-	if (!Controller || !Player) return;
+	if (!Controller)
+	{
+		UE_LOG(LogTemp, Display, TEXT("No controller"));
 
+		return;
+	}
+
+	if(!Player)
+	{
+		UE_LOG(LogTemp, Display, TEXT("No player"));
+
+		return;
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("PEW PEW PEW"));
+	
 	MakeShot();
 	GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ARifle::MakeShot, TimeBetweenShots, true);
 }
@@ -64,7 +78,7 @@ void ARifle::MakeShot()
 
 	FHitResult Hit;
 	GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, CollisionParams);
-	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 5);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, false, 5);
 
 	if (Hit.bBlockingHit)
 	{

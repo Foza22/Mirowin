@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class AMirowinShooterGameMode;
+class URespawnComponent;
 class UHealthComponent;
 class ABaseWeapon;
 class UInputComponent;
@@ -27,7 +29,7 @@ public:
 	UHealthComponent* GetHealthComponent() const {return HealthComponent;}
 	UWeaponComponent* GetWeaponComponent() const {return WeaponComponent;}
 
-	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	virtual USkeletalMeshComponent* GetCharacterMesh() const { return Mesh1P; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -52,4 +54,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UWeaponComponent* WeaponComponent;
+
+	UPROPERTY()
+	AMirowinShooterGameMode* GameMode;
 };

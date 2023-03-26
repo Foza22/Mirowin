@@ -19,6 +19,8 @@ public:
 	AAICharacter(const FObjectInitializer& ObjInit);
 
 	virtual void OnDeath() override;
+	
+	virtual USkeletalMeshComponent* GetCharacterMesh() const override { return GetMesh(); }
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UBehaviorTree* BehaviorTreeAsset;

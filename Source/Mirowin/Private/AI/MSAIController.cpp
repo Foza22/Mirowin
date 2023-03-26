@@ -2,7 +2,7 @@
 
 
 #include "AI/MSAIController.h"
-
+#include "Components/RespawnComponent.h"
 #include "AICharacter.h"
 #include "BaseCharacter.h"
 #include "MSAIPerceptionComponent.h"
@@ -12,6 +12,8 @@ AMSAIController::AMSAIController()
 {
 	MSPerceptionComponent = CreateDefaultSubobject<UMSAIPerceptionComponent>(TEXT("PerceptionComponent"));
 	SetPerceptionComponent(*MSPerceptionComponent);
+	
+	RespawnComponent = CreateDefaultSubobject<URespawnComponent>(TEXT("RespawnComponent"));
 }
 
 void AMSAIController::Tick(float DeltaSeconds)

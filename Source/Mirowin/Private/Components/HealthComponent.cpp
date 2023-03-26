@@ -18,7 +18,6 @@ void UHealthComponent::BeginPlay()
 	auto ComponentOwner = GetOwner();
 	if (ComponentOwner)
 	{
-		UE_LOG(LogTemp, Display, TEXT("HERE IS THE OWNER"));
 		ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnTakeAnyDamage);
 	}
 }
@@ -29,12 +28,21 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 {
 	if (Damage <= 0.f || IsDead()) return;
 
-	UE_LOG(LogTemp, Display, TEXT("Damage: %f"), Damage);
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
-	UE_LOG(LogTemp, Display, TEXT("Health: %f"), Health);
 
 	if (IsDead())
-	{
+	{	Killed(InstigatedBy);
 		OnDeath.Broadcast();
 	}
+}
+
+void UHealthComponent::Killed(AController* KillerController)
+{
+	const auto GameMode = Cast<AMirowinShooterGameMode>(GetWorld()->GetAuthGameMode());
+	if(!GameMode) return;
+
+	const auto Player = Cast<APawn>(GetOwner());
+	const auto VictimController = Player ? Player->Controller : nullptr;
+
+	GameMode->Killed(KillerController, VictimController);
 }

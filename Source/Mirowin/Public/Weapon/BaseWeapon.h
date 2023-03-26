@@ -40,7 +40,7 @@ public:
 	bool TryToAddAmmo(float Amount);
 	bool IsReloading() const { return GetWorldTimerManager().IsTimerActive(ReloadTimerHandle); }
 
-	void AssignController(AActor* Character);
+	void AssignController();
 
 	FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
@@ -51,7 +51,6 @@ protected:
 	void DecreaseAmmo();
 	bool IsClipEmpty() const;
 	void ChangeClip();
-	void LogAmmo();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	USkeletalMeshComponent* WeaponMesh;

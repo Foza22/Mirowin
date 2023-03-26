@@ -3,6 +3,7 @@
 
 #include "Components/WeaponComponent.h"
 
+#include "AICharacter.h"
 #include "BaseCharacter.h"
 #include "Weapon/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,30 +23,34 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	UE_LOG(LogTemp, Display, TEXT("Begin play"));
+	
+	Weapons.Empty();
+	CurrentWeapon = nullptr;
+	
 	SpawnWeapon();
 }
 
 
 void UWeaponComponent::SpawnWeapon()
 {
+	UE_LOG(LogTemp, Display, TEXT("Spawn weapon"));
+
 	const auto Character = Cast<ABaseCharacter>(GetOwner());
 	if(!Character) return;
 	
 	CurrentWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
 	if (!CurrentWeapon) return;
 
-	auto Mesh = Character->GetMesh1P();
-	if(!Mesh)
-	{
-		Mesh = Character->GetMesh();
-	}
+	USkeletalMeshComponent* Mesh = Character->GetCharacterMesh();
 	
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	CurrentWeapon->AttachToComponent(Mesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
 							  TEXT("GripPoint"));
 
-	CurrentWeapon->AssignController(Character);
+	CurrentWeapon->SetOwner(Character);
+	CurrentWeapon->AssignController();
 
 	UE_LOG(LogTemp, Display, TEXT("Spawned successful"));
 
@@ -54,7 +59,9 @@ void UWeaponComponent::SpawnWeapon()
 
 void UWeaponComponent::StartFire()
 {
+	UE_LOG(LogTemp, Display, TEXT("Try to fire"));
 	if(!CurrentWeapon) return;
+	UE_LOG(LogTemp, Display, TEXT("Succeed to fire"));
 
 	CurrentWeapon->StartFire();
 }
@@ -79,14 +86,10 @@ bool UWeaponComponent::TryToAddAmmo(TSubclassOf<ABaseWeapon> WeaponType, int32 A
 	{
 		if(Weapon->IsA(WeaponType))
 		{
-			UE_LOG(LogTemp, Display, TEXT("Weapon type was found"));
-
 			return Weapon->TryToAddAmmo(AmmoAmount);
 		}
 	}
 	
-	UE_LOG(LogTemp, Display, TEXT("Weapon type was not found"));
-
 	return false;
 }
 
@@ -96,12 +99,9 @@ bool UWeaponComponent::NeedAmmo(TSubclassOf<ABaseWeapon> WeaponType)
 	{
 		if(Weapon->IsA(WeaponType))
 		{
-			UE_LOG(LogTemp, Display, TEXT("Weapon type was found"));
 			return !Weapon->IsAmmoFull();
 		}
 	}
-	
-	UE_LOG(LogTemp, Display, TEXT("Weapon type was not found"));
 
 	return false;
 }

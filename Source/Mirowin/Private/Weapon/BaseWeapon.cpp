@@ -25,15 +25,12 @@ ABaseWeapon::ABaseWeapon()
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 	SetRootComponent(WeaponMesh);
-
 }
 
 // Called when the game starts or when spawned
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Player = Cast<ACharacter>(GetOwner());
 
 	CurrentAmmo = SpawnAmmo;
 }
@@ -53,7 +50,6 @@ void ABaseWeapon::MakeShot()
 void ABaseWeapon::DecreaseAmmo()
 {
 	--CurrentAmmo.AmmoInClip;
-	LogAmmo();
 
 	if (IsClipEmpty())
 	{
@@ -119,19 +115,11 @@ void ABaseWeapon::ChangeClip()
 	}
 
 	bCanFire = true;
-	LogAmmo();
-}
-
-void ABaseWeapon::LogAmmo()
-{
-	UE_LOG(LogTemp, Display, TEXT("%d / %d"), CurrentAmmo.AmmoInClip, CurrentAmmo.AmmoInBackpack);
 }
 
 bool ABaseWeapon::TryToAddAmmo(float Amount)
 {
 	if(IsAmmoFull()) return false;
-
-	UE_LOG(LogTemp, Display, TEXT("Ammo is not full"));
 
 	const auto AmmoCanBeAdded = MaxAmmo.AmmoInBackpack - CurrentAmmo.AmmoInBackpack;
 
@@ -144,7 +132,7 @@ bool ABaseWeapon::TryToAddAmmo(float Amount)
 		StartReload();
 	}
 
-	LogAmmo();
+	UE_LOG(LogTemp, Display, TEXT("%d / %d"), CurrentAmmo.AmmoInClip, CurrentAmmo.AmmoInBackpack);
 
 	return true;
 }
@@ -157,10 +145,20 @@ void ABaseWeapon::MakeDamage(const FHitResult& Hit)
 	DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), Controller, Player);
 }
 
-void ABaseWeapon::AssignController(AActor* Character)
+void ABaseWeapon::AssignController()
 {
-	Player = Cast<ABaseCharacter>(Character);
+	Player = Cast<ABaseCharacter>(GetOwner());
 	if (!Player) return;
 
+	auto contr = Player->GetController();
+	if (contr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("%s"), *contr->GetName());
+	}
+	
 	Controller = Player->GetController<AController>();
+	if(Controller)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Assigned controller"));
+	}
 }

@@ -8,6 +8,8 @@
 
 
 class UMSAIPerceptionComponent;
+class URespawnComponent;
+
 UCLASS()
 class MIROWIN_API AMSAIController : public AAIController
 {
@@ -16,7 +18,12 @@ class MIROWIN_API AMSAIController : public AAIController
 public:
 	AMSAIController();
 
+	URespawnComponent* GetRespawnComponent() const {return RespawnComponent;}
+
 protected:
+	UPROPERTY(VisibleAnywhere)
+	URespawnComponent* RespawnComponent;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UMSAIPerceptionComponent* MSPerceptionComponent;
 
@@ -28,4 +35,5 @@ protected:
 
 private:
 	AActor* GetFocusOnActor() const;
+	
 };

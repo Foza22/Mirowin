@@ -37,4 +37,6 @@ protected:
 
 private:
 	float Health = 0.0f;
+
+	void Killed(AController* KillerController);
 };

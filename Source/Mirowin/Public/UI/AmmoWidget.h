@@ -30,9 +30,9 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UPROPERTY()
-	ABaseCharacter* Player;
-
-	UPROPERTY()
-	UWeaponComponent* WeaponComponent;
+	// UPROPERTY()
+	// ABaseCharacter* Player;
+	//
+	// UPROPERTY()
+	// UWeaponComponent* WeaponComponent;
 };

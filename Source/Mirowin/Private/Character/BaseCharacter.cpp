@@ -3,6 +3,8 @@
 
 #include "Character/BaseCharacter.h"
 
+#include "MirowinShooterGameMode.h"
+#include "RespawnComponent.h"
 #include "Components/HealthComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -44,8 +46,9 @@ ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjInit)
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	HealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
+	GameMode = Cast<AMirowinShooterGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called to bind functionality to input
@@ -94,12 +97,16 @@ void ABaseCharacter::MoveRight(float Value)
 void ABaseCharacter::OnDeath()
 {
 	GetCharacterMovement()->DisableMovement();
+	if(GameMode)
+	{
+		const auto RespawnTime = GameMode->GetRespawnTime() + 0.1f;
+		SetLifeSpan(RespawnTime);
+	}
 
-	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
 	WeaponComponent->StopFire();
 
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	GetMesh()->SetSimulatePhysics(true);
-	
-	UE_LOG(LogTemp, Display, TEXT("Dead"));
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	GetCharacterMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetCharacterMesh()->SetSimulatePhysics(true);
 }
