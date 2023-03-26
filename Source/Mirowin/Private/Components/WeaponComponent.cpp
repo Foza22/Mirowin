@@ -35,8 +35,6 @@ void UWeaponComponent::BeginPlay()
 
 void UWeaponComponent::SpawnWeapon()
 {
-	UE_LOG(LogTemp, Display, TEXT("Spawn weapon"));
-
 	const auto Character = Cast<ABaseCharacter>(GetOwner());
 	if(!Character) return;
 	
@@ -52,16 +50,12 @@ void UWeaponComponent::SpawnWeapon()
 	CurrentWeapon->SetOwner(Character);
 	CurrentWeapon->AssignController();
 
-	UE_LOG(LogTemp, Display, TEXT("Spawned successful"));
-
 	Weapons.Emplace(CurrentWeapon);
 }
 
 void UWeaponComponent::StartFire()
 {
-	UE_LOG(LogTemp, Display, TEXT("Try to fire"));
 	if(!CurrentWeapon) return;
-	UE_LOG(LogTemp, Display, TEXT("Succeed to fire"));
 
 	CurrentWeapon->StartFire();
 }

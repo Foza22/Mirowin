@@ -5,6 +5,7 @@
 
 #include "BaseCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "RespawnComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -132,8 +133,6 @@ bool ABaseWeapon::TryToAddAmmo(float Amount)
 		StartReload();
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("%d / %d"), CurrentAmmo.AmmoInClip, CurrentAmmo.AmmoInBackpack);
-
 	return true;
 }
 
@@ -147,18 +146,15 @@ void ABaseWeapon::MakeDamage(const FHitResult& Hit)
 
 void ABaseWeapon::AssignController()
 {
-	Player = Cast<ABaseCharacter>(GetOwner());
+	Player = Cast<ACharacter>(GetOwner());
 	if (!Player) return;
 
-	auto contr = Player->GetController();
-	if (contr)
-	{
-		UE_LOG(LogTemp, Display, TEXT("%s"), *contr->GetName());
-	}
+	UE_LOG(LogTemp, Display, TEXT("Trying to get controller"));
 	
-	Controller = Player->GetController<AController>();
+	Controller = Player->GetController();
+	
 	if(Controller)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Assigned controller"));
+		UE_LOG(LogTemp, Display, TEXT("Assigned %s"), *Controller->GetName());
 	}
 }

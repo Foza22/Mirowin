@@ -14,6 +14,8 @@ AMirowinShooterGameMode::AMirowinShooterGameMode() : Super()
 {
 	DefaultPawnClass = ABaseCharacter::StaticClass();
 
+	PlayerControllerClass = AMSPlayerController::StaticClass();
+
 	// use our custom HUD class
 	HUDClass = AMirowinShooterHUD::StaticClass();
 }
@@ -21,13 +23,13 @@ AMirowinShooterGameMode::AMirowinShooterGameMode() : Super()
 void AMirowinShooterGameMode::StartPlay()
 {
 	Super::StartPlay();
-	
+
 	SpawnBots();
 }
 
 UClass* AMirowinShooterGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
 {
-	if(InController && InController->IsA<AAIController>())
+	if (InController && InController->IsA<AAIController>())
 	{
 		return AIPawnClass;
 	}
@@ -38,7 +40,7 @@ UClass* AMirowinShooterGameMode::GetDefaultPawnClassForController_Implementation
 void AMirowinShooterGameMode::SpawnBots()
 {
 	UE_LOG(LogTemp, Display, TEXT("Spawn bots"));
-	for(int32 i = 0; i < BotsNum; ++i)
+	for (int32 i = 0; i < BotsNum; ++i)
 	{
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -51,8 +53,8 @@ void AMirowinShooterGameMode::SpawnBots()
 void AMirowinShooterGameMode::Killed(AController* KillerController, AController* VictimController)
 {
 	RespawnComponent = Cast<URespawnComponent>(VictimController->GetComponentByClass(URespawnComponent::StaticClass()));
-	if(!RespawnComponent) return;
-	
+	if (!RespawnComponent) return;
+
 	RespawnComponent->StartRespawn(RespawnTime);
 }
 
@@ -60,10 +62,9 @@ void AMirowinShooterGameMode::RequestRespawn(AController* Controller)
 {
 	if (Controller && Controller->GetPawn())
 	{
-		UE_LOG(LogTemp, Display, TEXT("Controller is valid"));
 		Controller->GetPawn()->Reset();
 		Controller->UnPossess();
 	}
-	
+
 	RestartPlayer(Controller);
 }
