@@ -17,22 +17,8 @@ void ARifle::BeginPlay()
 
 void ARifle::StartFire()
 {
-	if (!Controller)
-	{
-		UE_LOG(LogTemp, Display, TEXT("No controller"));
+	if (!Controller || !Player)	return;
 
-		return;
-	}
-
-	if(!Player)
-	{
-		UE_LOG(LogTemp, Display, TEXT("No player"));
-
-		return;
-	}
-
-	UE_LOG(LogTemp, Display, TEXT("PEW PEW PEW"));
-	
 	MakeShot();
 	GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ARifle::MakeShot, TimeBetweenShots, true);
 }
