@@ -21,6 +21,8 @@ public:
 	virtual void DrawHUD() override;
 
 protected:
+	void DrawCrosshair();
+	
 	/** Crosshair asset pointer */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UTexture2D* CrosshairTex;

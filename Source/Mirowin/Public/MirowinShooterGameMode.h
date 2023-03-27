@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	TSubclassOf<APawn> AIPawnClass;
 
+	UPROPERTY()
+	TArray<AActor*> PlayerStarts;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Game)
 	int32 BotsNum = 1;
 
@@ -44,6 +47,9 @@ protected:
 
 private:
 	void SpawnBots();
+	void GetPlayerStarts();
+
+	AActor* FindSuitablePlayerStart(AController* Controller);
 
 	FTimerHandle RespawnTimerHandle;
 
